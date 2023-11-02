@@ -1,4 +1,4 @@
-#r "nuget: Lestaly, 0.46.0"
+#r "nuget: Lestaly, 0.50.0"
 #nullable enable
 using System.Net.Http;
 using System.Threading;
@@ -17,16 +17,13 @@ The following must be added to the custom header in the BookStack configuration.
 
 ConsoleWig.WriteLineColored(ConsoleColor.Green, "Restart containers.");
 await "docker".args("compose", "--file", compose_yml.FullName, "down", "--remove-orphans", "--volumes");
-await "docker".args("compose", "--file", compose_yml.FullName, "up", "-d");
+await "docker".args("compose", "--file", compose_yml.FullName, "up", "-d").result().success();
 ConsoleWig.WriteLine();
 
 ConsoleWig.WriteLineColored(ConsoleColor.Green, "Wait until it becomes accessible.");
 using (var canceller = new CancellationTokenSource(30 * 1000))
 using (var client = new HttpClient())
 {
-    while ((await client.TryGetAsync(service, canceller.Token)) == null)
-    {
-        await Task.Delay(1000, canceller.Token);
-    }
+    while (!await client.IsSuccessStatusAsync(service, canceller.Token)) await Task.Delay(1000, canceller.Token);
     await CmdShell.ExecAsync(service.AbsoluteUri);
 }
