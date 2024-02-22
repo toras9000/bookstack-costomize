@@ -1,4 +1,3 @@
-version: '3.5'
 services:
   db:
     # (windows + docker desktop + wsl2 + mariadb + bookstack) is initial migration failed.
@@ -12,11 +11,11 @@ services:
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "--host=localhost", "--user=root"]
       interval: 15s
-      timeout: 5s
+      timeout: 10s
       retries: 10
       start_period: 60s
-#    volumes:
-#      - ./volumes/bookstack/db:/var/lib/mysql
+    volumes:
+      - ./volumes/bookstack/db:/var/lib/mysql
     environment:
       - TZ=Asia/Tokyo
       - MYSQL_ROOT_PASSWORD=bookstack_rootpass
@@ -34,10 +33,16 @@ services:
       default:
         aliases:
           - bookstack-app-container
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 40
+      start_period: 30s
     ports:
       - "9902:80"
     volumes:
-#      - ./volumes/bookstack/app:/config
+      - ./volumes/bookstack/app:/config
       - ./assets/init:/custom-cont-init.d
       - ./assets/template:/assets/template
     environment:
