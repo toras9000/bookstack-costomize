@@ -94,7 +94,7 @@
             else if ($entity->isA('chapter'))   { $category = 'chapters'; }
             else if ($entity->isA('page'))      { $category = 'pages';    }
         @endphp
-        @if ($category)
+        @if (!empty($category))
             <a href="/link/{{ $category }}/{{ $entity->id }}" class="entity-meta-item">
                 @icon('link')
                 <div>
