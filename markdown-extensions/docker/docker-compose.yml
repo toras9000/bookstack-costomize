@@ -14,8 +14,6 @@ services:
       timeout: 10s
       retries: 10
       start_period: 60s
-    volumes:
-      - ./volumes/bookstack/db:/var/lib/mysql
     environment:
       - TZ=Asia/Tokyo
       - MYSQL_ROOT_PASSWORD=bookstack_rootpass
@@ -42,7 +40,6 @@ services:
     ports:
       - "9902:80"
     volumes:
-      - ./volumes/bookstack/app:/config
       - ./assets/init:/custom-cont-init.d
       - ./assets/template:/assets/template
     environment:
