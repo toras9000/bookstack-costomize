@@ -12,10 +12,3 @@ if [ -d /config/www/themes/my-theme/custom ]; then
     echo Link custom public dir
     ln -s /config/www/themes/my-theme/custom    /app/www/public/custom
 fi
-
-# Add theme setting
-if [ -z "$(grep -e '^\s*APP_THEME\s*=' /config/www/.env)" ]; then
-    echo Add theme setting
-    echo "APP_THEME=my-theme" >> /config/www/.env
-fi
-
